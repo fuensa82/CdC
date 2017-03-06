@@ -5,7 +5,6 @@
  */
 package com.fuensalida.BaseDatos;
 
-import com.fuensalida.Venta;
 import com.fuensalida.beans.EstadoBean;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -44,7 +43,7 @@ public class GestionEstadosBD {
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (NamingException ex) {
-            Logger.getLogger(Venta.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GestionEstadosBD.class.getName()).log(Level.SEVERE, null, ex);
         }finally{
             try {
                 System.out.println("Saliendo de la base de datos");
