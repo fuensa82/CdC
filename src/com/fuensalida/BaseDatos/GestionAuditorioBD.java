@@ -21,14 +21,14 @@ import javax.naming.NamingException;
  * @author vPalomo
  */
 public class GestionAuditorioBD {
-    public static ArrayList getEstadoButacas(String idActividad, String idSesion){
+    public static ArrayList getEstadoButacas(int idActividad, int idSesion){
         ArrayList result=new ArrayList();
         Connection conexion = null;
         try {
             conexion=ConectorBD.getConnection();
             PreparedStatement consulta = conexion.prepareStatement("select idButaca, idActividad, idSesion, idEstado, Motivo from butacassesion where idActividad=? and idSesion=?");
-            consulta.setString(1, idActividad);
-            consulta.setString(2, idSesion);
+            consulta.setString(1, ""+idActividad);
+            consulta.setString(2, ""+idSesion);
             ResultSet resultado = consulta.executeQuery();
             while(resultado.next()){
                 ButacaSesion b=new ButacaSesion();
@@ -61,9 +61,11 @@ public class GestionAuditorioBD {
             PreparedStatement consulta = conexion.prepareStatement("select fila, asiento from butacas where idButaca=?");
             consulta.setString(1, ""+idButaca);
             ResultSet resultado = consulta.executeQuery();
-            while(resultado.next()){
-                result="Fila "+resultado.getString(1)+", asiento "+resultado.getString(2);
-            }
+            
+            //Solo debe haber una butaca, pero lo recorremos
+            resultado.next();
+            result="Fila "+resultado.getString(1)+", asiento "+resultado.getString(2);
+            
             System.out.println(result);
             
         } catch (SQLException e) {
@@ -78,5 +80,97 @@ public class GestionAuditorioBD {
             }
         }
         return result;
+    }
+    
+    /**
+     * select count(idButaca) from butacassesion where idActividad=? and idSesion=? and idEstado!=1
+     */
+    /**
+     * Calcula las butacas ocupadas de la secion y actividad dada. Cuentas todas las butacas menos las que están libres
+     * @param actividad
+     * @param sesion
+     * @return 
+     */
+    public static int getOcupadas(int actividad, int sesion){
+        int result=0;
+        Connection conexion = null;
+        try {
+            conexion=ConectorBD.getConnection();
+            PreparedStatement consulta = conexion.prepareStatement("select count(idButaca) from butacassesion where idActividad=? and idSesion=? and idEstado!=1");
+            consulta.setString(1, ""+actividad);
+            consulta.setString(2, ""+sesion);
+            ResultSet resultado = consulta.executeQuery();
+            resultado.next();
+            result=Integer.parseInt(resultado.getString(1));
+            //result="Fila "+resultado.getString(1)+", asiento "+resultado.getString(1);
+            
+            System.out.println("Total ocupadas: "+result);
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (NamingException ex) {
+            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                System.out.println("Saliendo de la base de datos");
+                conexion.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(GestionAuditorioBD.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return result;
+    }
+    
+    /**
+     * Calcula las butacas en el estado dado de la secion y actividad dada.
+     * @param actividad
+     * @param sesion
+     * @param estado idEstado que se quiere consultar
+     * @return 
+     */
+    public static int getButacasEstado(int actividad, int sesion, int estado){
+        int result=0;
+        Connection conexion = null;
+        try {
+            conexion=ConectorBD.getConnection();
+            PreparedStatement consulta = conexion.prepareStatement("select count(idButaca) from butacassesion where idActividad=? and idSesion=? and idEstado=?");
+            consulta.setString(1, ""+actividad);
+            consulta.setString(2, ""+sesion);
+            consulta.setString(3, ""+estado);
+            ResultSet resultado = consulta.executeQuery();
+            resultado.next();
+            result=Integer.parseInt(resultado.getString(1));
+            //result="Fila "+resultado.getString(1)+", asiento "+resultado.getString(1);
+            
+            System.out.println("Total butacas estado "+estado+": "+result);
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (NamingException ex) {
+            Logger.getLogger(NewJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                System.out.println("Saliendo de la base de datos");
+                conexion.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(GestionAuditorioBD.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return result;
+    }
+    public static int getButacasVendidas(int actividad, int sesion){
+        return getButacasEstado(actividad, sesion,2);      
+    }
+    public static int getButacasReservadas(int actividad, int sesion){
+        return getButacasEstado(actividad, sesion,3);      
+    }
+    public static int getButacasNoVender(int actividad, int sesion){
+        return getButacasEstado(actividad, sesion,4);      
+    }
+    public static int getButacasInvitaciones(int actividad, int sesion){
+        return getButacasEstado(actividad, sesion,5);      
+    }
+    public static int getButacasAbonos(int actividad, int sesion){
+        return getButacasEstado(actividad, sesion,6);      
     }
 }

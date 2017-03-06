@@ -19,6 +19,7 @@ public class ButacaSesion {
 
     public ButacaSesion(int id){
         idButaca=id;
+        idEstado=1; //libre
     }
     public ButacaSesion(){}
     

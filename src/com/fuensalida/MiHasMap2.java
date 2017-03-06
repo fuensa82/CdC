@@ -20,6 +20,12 @@ public class MiHasMap2 {
         butaca=new HashMap();
         butacaJT=new HashMap();
     }
+    
+    public void depurar(){
+        System.out.println("Butacas: "+butaca.size());
+        System.out.println("butacaJT: "+butacaJT.size());
+    }
+    
     /**
      * 
      * @param i Key de la butaca que se quiere recuperar
@@ -36,7 +42,7 @@ public class MiHasMap2 {
         butacaJT.put(key, bJT);
     }
     /**
-     * Añade el boton y crea la butaca si no existe (butaca libre sin datos, solo con el id)
+     * Añade el boton y crea la butaca si no existe (butaca libre sin datos, solo con el id y con el estado libre (1))
      * @param key
      * @param bJT 
      */
