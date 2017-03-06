@@ -20,33 +20,7 @@ import javax.naming.NamingException;
  * @author vPalomo
  */
 public class GestionEstadosBD {
-    static final int LIBRE=0;
-    static final int VENDIDA=1;
-    static final int RESERVADA=2;
-    static final int NO_VENDER=3;
-    static final int INVITACION=4;
-    static final int ABONO=5;
-    static final int OTROS=99;
     
-    static String getEstado2(String estado){
-        if("0".equalsIgnoreCase(estado)){
-            return "LIBRE";
-        }else if("1".equalsIgnoreCase(estado)){
-            return "VENDIDA";
-        }else if("2".equalsIgnoreCase(estado)){
-            return "RESERVADA";
-        }else if("3".equalsIgnoreCase(estado)){
-            return "NO VENDER";
-        }else if("4".equalsIgnoreCase(estado)){
-            return "INVITACION";
-        }else if("5".equalsIgnoreCase(estado)){
-            return "ABONO";
-        }else if("99".equalsIgnoreCase(estado)){
-            return "OTROS";
-        }else{
-            return "DESCONOCIDO";
-        }
-    }
     public static EstadoBean getEstado(int estado){
         return getEstado(""+estado);
     }
